@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>WelcomeScreen</title>
+</h:head>
+<h:body>
+    <h1>Студенты</h1>
+
+    <h:form>
+        <h:panelGrid columns="12" cellpadding="5">
+            <h:outputText value="ФИО "/>
+            <p:inputText value="#{studentController.fullName}"/>
+            <h:outputText value="Факультет "/>
+            <p:inputText value="#{studentController.faculty}"/>
+            <p:commandButton value="Добавить" icon="fa fa-fw fa-plus" action="#{studentController.create()}" update="form"/>
+        </h:panelGrid>
+    </h:form>
+
+    <h:form id="form">
+        <p:dataTable value="#{studentController.getAll()}" var="student" style="margin: 2em;">
+
+            <p:column headerText="ФИО">
+                <h:outputText value="#{student.fullName}"/>
+            </p:column>
+            <p:column headerText="Факультет">
+                <h:outputText value="#{student.faculty}"/>
+            </p:column>
+            <p:column headerText="">
+                <p:commandButton value="Удалить" action="#{studentController.delete(student)}" update="form"/>
+                <p:commandButton icon="fa fa-pencil" update=":form:studentEdit" oncomplete="PF('editDialog').show()">
+                    <f:setPropertyActionListener value="#{student}" target="#{studentController.selectedStudent}"/>
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+
+        <p:dialog header="Изменить параметры" widgetVar="editDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <p:outputPanel id="studentEdit" style="text-align:center;">
+                <p:panelGrid  columns="2" rendered="#{not empty studentController.selectedStudent}" columnClasses="label,value">
+                    <p:inputText value="#{studentController.selectedStudent.fullName}" /><h:outputText value="ФИО " />
+                    <p:inputText value="#{studentController.selectedStudent.faculty}" /><h:outputText value="ФАКУЛЬТЕТ " />
+                </p:panelGrid><p:commandButton value="ИЗМЕНИТЬ" icon="fa fa-fw fa-pencil" action="#{studentController.update(student,selectedStudent)}"/>
+            </p:outputPanel>
+        </p:dialog>
+
+    </h:form>
+</h:body>
+</html>
